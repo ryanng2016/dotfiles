@@ -1,0 +1,16 @@
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.vscode-root/
+
+# caches
+.cache/
+*.log
+
+# secrets - never commit
+**/.ssh/
+**/*id_rsa*
+**/*id_ed25519*
+**/*secrets*
+**/*token*
