@@ -1,23 +1,20 @@
 ### =========================
 ### Sway Starter Config (Arch)
-### Terminal/Launcher + Core QoL
+### VN-Styled Clean Layout
 ### =========================
 
 # --- Mod key ---
-# Mod4 = Super/Windows key
 set $mod Mod4
 
 # --- Apps ---
 set $term kitty
-set $menu wofi --show drun
+set $menu wofi --show drun --style ~/.config/wofi/style.css
 set $fm nemo
-set $file_explorer nautilus
 
-# --- Visuals ---
+# --- Font ---
 font pango:DejaVu Sans 10
 
-# --- Basic behavior ---
-# Use mouse/touchpad settings as needed (safe defaults)
+# --- Touchpad defaults ---
 input type:touchpad {
     dwt enabled
     tap enabled
@@ -25,60 +22,91 @@ input type:touchpad {
     middle_emulation enabled
 }
 
-# --- Output (leave minimal for now; adjust later) ---
-# Example if needed:
-# output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+### --- Output: ThinkPad T420 Panel ---
+output LVDS-1 mode 1600x900@60.007Hz
+output LVDS-1 pos 0 0
+output LVDS-1 scale 1
+output LVDS-1 scale_filter linear
+output LVDS-1 subpixel rgb
+output LVDS-1 adaptive_sync off
+output LVDS-1 allow_tearing no
+
+# --- Gaps ---
+gaps inner 8
+gaps outer 8
+
+# --- Borders ---
+default_border pixel 1
+default_floating_border pixel 1
 
 # =========================
-# Keybindings: Essentials
+# Border Colors (Rose / Plum / Dusk VN Palette)
+# Format:
+# client.<state> border background text indicator child_border
+# =========================
+client.focused          #ffb2c3  #2b1f22  #ffffff  #c4b5fd  #ffb2c3
+client.focused_inactive #6b5a60  #23191b  #d9d9d9  #3a2a2d  #6b5a60
+client.unfocused        #3a2a2d  #1c1412  #bdbdbd  #2a1e1f  #3a2a2d
+client.urgent           #fca5a5  #1c1412  #ffffff  #fca5a5  #fca5a5
+client.placeholder      #3a2a2d  #1c1412  #bdbdbd  #2a1e1f  #3a2a2d
+
+# =========================
+# Wallpaper
+# =========================
+# Make sure swaybg is installed: sudo pacman -S swaybg
+exec_always swaybg -i /home/madoka/theme/Holy_Heaven.webp -m fill
+
+# =========================
+# Keybindings
 # =========================
 
-# Terminal
 bindsym $mod+Return exec $term
-
-# App launcher (search apps)
 bindsym $mod+d exec $menu
-
-# File manager
 bindsym $mod+e exec $fm
-
-# VS Code (Wayland)
+bindsym $mod+n exec nm-connection-editor
 bindsym $mod+c exec code --ozone-platform=wayland
 
-# Close focused window
-bindsym $mod+Shift+q kill
+# Close window safely
+bindsym $mod+q kill
 
-# Reload config (apply changes)
+# Reload
 bindsym $mod+Shift+r reload
 
-# Exit Sway (log out to greeter)
+# Exit
 bindsym $mod+Shift+e exec swaynag -t warning -m "Exit Sway?" -B "Yes" "swaymsg exit"
 
 # =========================
-# Focus / Move / Layout
+# Focus / Movement
 # =========================
 
-# Focus between windows
 bindsym $mod+h focus left
 bindsym $mod+j focus down
 bindsym $mod+k focus up
 bindsym $mod+l focus right
 
-# Move windows
 bindsym $mod+Shift+h move left
 bindsym $mod+Shift+j move down
 bindsym $mod+Shift+k move up
 bindsym $mod+Shift+l move right
 
-# Split orientation
-bindsym $mod+b layout splith      # split horizontally (side-by-side)
-bindsym $mod+v layout splitv      # split vertically (stacked)
+bindsym $mod+b layout splith
+bindsym $mod+v layout splitv
 
-# Toggle layout modes
 bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+f fullscreen toggle
 bindsym $mod+Space floating toggle
+
+# Resize mode
+mode "resize" {
+    bindsym h resize shrink width 10px
+    bindsym j resize grow height 10px
+    bindsym k resize shrink height 10px
+    bindsym l resize grow width 10px
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
 
 # =========================
 # Workspaces
@@ -90,14 +118,12 @@ set $ws3 "3:code"
 set $ws4 "4:files"
 set $ws5 "5:media"
 
-# Switch to workspace
 bindsym $mod+1 workspace $ws1
 bindsym $mod+2 workspace $ws2
 bindsym $mod+3 workspace $ws3
 bindsym $mod+4 workspace $ws4
 bindsym $mod+5 workspace $ws5
 
-# Move focused window to workspace
 bindsym $mod+Shift+1 move container to workspace $ws1; workspace $ws1
 bindsym $mod+Shift+2 move container to workspace $ws2; workspace $ws2
 bindsym $mod+Shift+3 move container to workspace $ws3; workspace $ws3
@@ -105,25 +131,20 @@ bindsym $mod+Shift+4 move container to workspace $ws4; workspace $ws4
 bindsym $mod+Shift+5 move container to workspace $ws5; workspace $ws5
 
 # =========================
-# Screenshots (grim + slurp)
+# Screenshots
 # =========================
 
-# Select area → copy to clipboard
 bindsym Print exec grim -g "$(slurp)" - | wl-copy
-
-# Select area → save to Pictures/Screenshots
 bindsym $mod+Print exec mkdir -p ~/Pictures/Screenshots && grim -g "$(slurp)" ~/Pictures/Screenshots/$(date +'%Y-%m-%d_%H-%M-%S').png
 
 # =========================
-# Audio / Media
+# Audio
 # =========================
 
-# Volume
 bindsym XF86AudioRaiseVolume exec pamixer -i 5
 bindsym XF86AudioLowerVolume exec pamixer -d 5
 bindsym XF86AudioMute exec pamixer -t
 
-# Media keys
 bindsym XF86AudioPlay exec playerctl play-pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
@@ -136,43 +157,23 @@ bindsym XF86MonBrightnessUp exec brightnessctl set +5%
 bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
 
 # =========================
-# Lock / Idle (simple)
+# Lock
 # =========================
 
-# Manual lock
 bindsym $mod+Ctrl+l exec swaylock -f
 
-# Optional idle lock (uncomment to enable)
-# exec_always swayidle -w \
-#   timeout 300 'swaylock -f' \
-#   timeout 600 'swaymsg "output * dpms off"' \
-#   resume 'swaymsg "output * dpms on"' \
-#   before-sleep 'swaylock -f'
-
 # =========================
-# Autostart: necessities
+# Autostart
 # =========================
 
-# Status bar
-exec_always pkill waybar; waybar
-
-# Polkit (for GUI prompts)
+exec_always sh -lc 'pkill waybar; waybar'
 exec_always /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-
-# Notifications (Wayland)
 exec_always sh -lc 'pgrep -x mako >/dev/null || mako'
 
-# Network tray (optional, Waybar usually covers this, but it's fine)
-exec_always nm-applet
-
-# Clipboard history manager (optional; add later if you want)
-# exec_always wl-paste --watch cliphist store
-
 # =========================
-# Quality-of-life defaults
+# Disable default swaybar
 # =========================
 
-# Use Waybar instead of the default swaybar
 bar {
     mode invisible
 }
