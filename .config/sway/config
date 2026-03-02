@@ -1,204 +1,174 @@
-# =========================================================
-# Sway config — VN-inspired romantic pastel / soft "glass" UI
-# =========================================================
+### =========================
+### Sway Starter Config (Arch)
+### Terminal/Launcher + Core QoL
+### =========================
 
-### Variables
+# --- Mod key ---
+# Mod4 = Super/Windows key
 set $mod Mod4
-set $left h
-set $down j
-set $up k
-set $right l
 
-# Apps
+# --- Apps ---
 set $term kitty
 set $menu wofi --show drun
-set $file nemo
+set $fm nemo
 
-# ---- VN pastel palette (edit these once; everything follows) ----
-# Deep dusk base + soft-lavender highlights + pink accent
-set $bg          #141321
-set $panel       #1B1930
-set $text        #F4F1FF
-set $muted       #B8B2D6
-set $accentPink  #FFB7D5
-set $accentLav   #BDA7FF
-set $accentSky   #A9E8FF
-set $borderSoft  #2A2740
+# --- Visuals ---
+font pango:DejaVu Sans 10
 
-# Font (simple, clean; switch later if you install a VN-ish font)
-font pango:DejaVu Sans 11
+# --- Basic behavior ---
+# Use mouse/touchpad settings as needed (safe defaults)
+input type:touchpad {
+    dwt enabled
+    tap enabled
+    natural_scroll enabled
+    middle_emulation enabled
+}
 
-### Output configuration
-# Replace this with your own wallpaper path for maximum VN vibe.
-# Tip: put wallpapers in ~/Pictures/wallpapers/
-# output * bg ~/Pictures/wallpapers/vn-pastel.png fill
-output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+# --- Output (leave minimal for now; adjust later) ---
+# Example if needed:
+# output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 
+# =========================
+# Keybindings: Essentials
+# =========================
 
-### Aesthetic layout tuning
-gaps inner 10
-gaps outer 6
-default_border pixel 2
-default_floating_border pixel 2
-
-# Softer focus colors (borders)
-# class                 border      background  text      indicator  child_border
-client.focused          $accentLav  $panel      $text     $accentPink $accentLav
-client.focused_inactive $borderSoft $panel      $muted    $borderSoft $borderSoft
-client.unfocused        $borderSoft $panel      $muted    $borderSoft $borderSoft
-client.urgent           $accentPink $panel      $text     $accentPink $accentPink
-client.placeholder      $borderSoft $panel      $muted    $borderSoft $borderSoft
-
-
-### Input configuration (optional starter defaults)
-# Uncomment and tune for your touchpad if you use one.
-# input type:touchpad {
-#   dwt enabled
-#   tap enabled
-#   natural_scroll enabled
-#   middle_emulation enabled
-# }
-
-### Autostart (Wayland-friendly)
-# Waybar gives you the "soft glass + gradient" bar look (CSS).
-exec_always --no-startup-id pkill waybar; waybar
-
-# Notifications (optional but recommended)
-# If you have mako installed, this will start it.
-exec_always --no-startup-id mako
-
-# Polkit agent (helps with GUI apps that need auth)
-exec_always --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-
-
-### Key bindings
-# Basics:
+# Terminal
 bindsym $mod+Return exec $term
-bindsym $mod+Shift+q kill
+
+# App launcher (search apps)
 bindsym $mod+d exec $menu
-bindsym $mod+e exec $file
 
-floating_modifier $mod normal
+# File manager
+bindsym $mod+e exec $fm
 
-# Reload / Exit
-bindsym $mod+Shift+c reload
-bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit sway? This ends your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+# VS Code (Wayland)
+bindsym $mod+c exec code --ozone-platform=wayland
 
+# Close focused window
+bindsym $mod+Shift+q kill
 
-# Moving around:
-bindsym $mod+$left focus left
-bindsym $mod+$down focus down
-bindsym $mod+$up focus up
-bindsym $mod+$right focus right
+# Reload config (apply changes)
+bindsym $mod+Shift+r reload
 
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
-bindsym $mod+Right focus right
+# Exit Sway (log out to greeter)
+bindsym $mod+Shift+e exec swaynag -t warning -m "Exit Sway?" -B "Yes" "swaymsg exit"
 
-bindsym $mod+Shift+$left move left
-bindsym $mod+Shift+$down move down
-bindsym $mod+Shift+$up move up
-bindsym $mod+Shift+$right move right
+# =========================
+# Focus / Move / Layout
+# =========================
 
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
+# Focus between windows
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
 
+# Move windows
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
 
-# Workspaces:
-bindsym $mod+1 workspace number 1
-bindsym $mod+2 workspace number 2
-bindsym $mod+3 workspace number 3
-bindsym $mod+4 workspace number 4
-bindsym $mod+5 workspace number 5
-bindsym $mod+6 workspace number 6
-bindsym $mod+7 workspace number 7
-bindsym $mod+8 workspace number 8
-bindsym $mod+9 workspace number 9
-bindsym $mod+0 workspace number 10
+# Split orientation
+bindsym $mod+b splith      # split horizontally (side-by-side)
+bindsym $mod+v splitv      # split vertically (stacked)
 
-bindsym $mod+Shift+1 move container to workspace number 1
-bindsym $mod+Shift+2 move container to workspace number 2
-bindsym $mod+Shift+3 move container to workspace number 3
-bindsym $mod+Shift+4 move container to workspace number 4
-bindsym $mod+Shift+5 move container to workspace number 5
-bindsym $mod+Shift+6 move container to workspace number 6
-bindsym $mod+Shift+7 move container to workspace number 7
-bindsym $mod+Shift+8 move container to workspace number 8
-bindsym $mod+Shift+9 move container to workspace number 9
-bindsym $mod+Shift+0 move container to workspace number 10
-
-
-# Layout stuff:
-bindsym $mod+b splith
-bindsym $mod+v splitv
-
+# Toggle layout modes
 bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
-bindsym $mod+f fullscreen
+bindsym $mod+f fullscreen toggle
+bindsym $mod+Space floating toggle
 
-# NOTE: your original used $mod+e layout toggle split,
-# but we repurposed $mod+e for Nemo. Use $mod+Shift+e? (reserved for exit)
-# Let's put layout toggle on $mod+Ctrl+e:
-bindsym $mod+Ctrl+e layout toggle split
+# =========================
+# Workspaces
+# =========================
 
-bindsym $mod+Shift+space floating toggle
-bindsym $mod+space focus mode_toggle
-bindsym $mod+a focus parent
+set $ws1 "1:term"
+set $ws2 "2:web"
+set $ws3 "3:code"
+set $ws4 "4:files"
+set $ws5 "5:media"
 
+# Switch to workspace
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
 
-# Scratchpad:
-bindsym $mod+Shift+minus move scratchpad
-bindsym $mod+minus scratchpad show
+# Move focused window to workspace
+bindsym $mod+Shift+1 move container to workspace $ws1; workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2; workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3; workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4; workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5; workspace $ws5
 
+# =========================
+# Screenshots (grim + slurp)
+# =========================
 
-# Resizing containers:
-mode "resize" {
-    bindsym $left resize shrink width 10px
-    bindsym $down resize grow height 10px
-    bindsym $up resize shrink height 10px
-    bindsym $right resize grow width 10px
+# Select area → copy to clipboard
+bindsym Print exec grim -g "$(slurp)" - | wl-copy
 
-    bindsym Left resize shrink width 10px
-    bindsym Down resize grow height 10px
-    bindsym Up resize shrink height 10px
-    bindsym Right resize grow width 10px
+# Select area → save to Pictures/Screenshots
+bindsym $mod+Print exec mkdir -p ~/Pictures/Screenshots && grim -g "$(slurp)" ~/Pictures/Screenshots/$(date +'%Y-%m-%d_%H-%M-%S').png
 
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
+# =========================
+# Audio / Media
+# =========================
+
+# Volume
+bindsym XF86AudioRaiseVolume exec pamixer -i 5
+bindsym XF86AudioLowerVolume exec pamixer -d 5
+bindsym XF86AudioMute exec pamixer -t
+
+# Media keys
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
+# =========================
+# Brightness
+# =========================
+
+bindsym XF86MonBrightnessUp exec brightnessctl set +5%
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+
+# =========================
+# Lock / Idle (simple)
+# =========================
+
+# Manual lock
+bindsym $mod+Shift+l exec swaylock -f
+
+# Optional idle lock (uncomment to enable)
+# exec_always swayidle -w \
+#   timeout 300 'swaylock -f' \
+#   timeout 600 'swaymsg "output * dpms off"' \
+#   resume 'swaymsg "output * dpms on"' \
+#   before-sleep 'swaylock -f'
+
+# =========================
+# Autostart: necessities
+# =========================
+
+# Status bar
+exec_always waybar
+
+# Polkit (for GUI prompts)
+exec_always /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+
+# Network tray (optional, Waybar usually covers this, but it's fine)
+exec_always nm-applet
+
+# Clipboard history manager (optional; add later if you want)
+# exec_always wl-paste --watch cliphist store
+
+# =========================
+# Quality-of-life defaults
+# =========================
+
+# Use Waybar instead of the default swaybar
+bar {
+    mode invisible
 }
-bindsym $mod+r mode "resize"
-
-
-# Utilities:
-bindsym --locked XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
-bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
-bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym --locked XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
-
-bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
-bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
-
-# Screenshot (better default than raw grim: select an area)
-# Requires: slurp
-bindsym Print exec grim -g "$(slurp)" ~/Pictures/Screenshots/$(date +'%Y-%m-%d_%H-%M-%S').png
-
-
-# ---------------------------------------------------------
-# IMPORTANT:
-# Disable sway's built-in bar block.
-# We are using Waybar (much better for VN pastel gradients).
-# ---------------------------------------------------------
-# bar {
-#     position top
-#     status_command while date +'%Y-%m-%d %X'; do sleep 1; done
-#     colors {
-#         statusline #ffffff
-#         background #323232
-#         inactive_workspace #32323200 #32323200 #5c5c5c
-#     }
-# }
-
-include /etc/sway/config.d/*
