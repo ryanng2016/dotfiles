@@ -11,6 +11,7 @@ set $mod Mod4
 set $term kitty
 set $menu wofi --show drun
 set $fm nemo
+set $file_explorer nautilus
 
 # --- Visuals ---
 font pango:DejaVu Sans 10
@@ -70,8 +71,8 @@ bindsym $mod+Shift+k move up
 bindsym $mod+Shift+l move right
 
 # Split orientation
-bindsym $mod+b splith      # split horizontally (side-by-side)
-bindsym $mod+v splitv      # split vertically (stacked)
+bindsym $mod+b layout splith      # split horizontally (side-by-side)
+bindsym $mod+v layout splitv      # split vertically (stacked)
 
 # Toggle layout modes
 bindsym $mod+s layout stacking
@@ -139,7 +140,7 @@ bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
 # =========================
 
 # Manual lock
-bindsym $mod+Shift+l exec swaylock -f
+bindsym $mod+Ctrl+l exec swaylock -f
 
 # Optional idle lock (uncomment to enable)
 # exec_always swayidle -w \
@@ -153,10 +154,13 @@ bindsym $mod+Shift+l exec swaylock -f
 # =========================
 
 # Status bar
-exec_always waybar
+exec_always pkill waybar; waybar
 
 # Polkit (for GUI prompts)
 exec_always /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+
+# Notifications (Wayland)
+exec_always sh -lc 'pgrep -x mako >/dev/null || mako'
 
 # Network tray (optional, Waybar usually covers this, but it's fine)
 exec_always nm-applet

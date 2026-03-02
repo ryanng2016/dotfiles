@@ -1,0 +1,259 @@
+/* ==========================
+   Pastel VN Waybar (Sway)
+   - cohesive translucent bar
+   - soft pills, gentle accent
+   ========================== */
+
+* {
+  /* If you install Sarasa Gothic / Noto Sans JP, it’ll feel very VN */
+  font-family: "Sarasa UI J", "Sarasa Gothic J", "Noto Sans JP", Roboto, Helvetica, Arial, sans-serif, "Font Awesome 6 Free";
+  font-size: 13px;
+  font-weight: 500;
+  min-height: 0;
+}
+
+/* --- Palette --- */
+@define-color bg rgba(18, 22, 34, 0.55);        /* muted navy glass */
+@define-color bg2 rgba(18, 22, 34, 0.32);
+@define-color stroke rgba(255, 255, 255, 0.10); /* soft border */
+@define-color text rgba(255, 255, 255, 0.92);
+@define-color muted rgba(255, 255, 255, 0.70);
+
+@define-color pill rgba(255, 255, 255, 0.08);
+@define-color pill2 rgba(255, 255, 255, 0.12);
+
+@define-color accent rgba(255, 182, 193, 0.95); /* soft pink */
+@define-color accent2 rgba(196, 181, 253, 0.95);/* lavender */
+@define-color good rgba(167, 243, 208, 0.90);   /* mint */
+@define-color warn rgba(253, 230, 138, 0.95);   /* soft amber */
+@define-color bad rgba(252, 165, 165, 0.95);    /* soft red */
+
+/* --- Bar container --- */
+window#waybar {
+  background: linear-gradient(180deg, @bg, @bg2);
+  color: @text;
+  border-bottom: 1px solid @stroke;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+
+  /* Optional blur (works if your compositor supports it; otherwise harmless) */
+  /* backdrop-filter: blur(10px); */
+}
+
+/* When hidden (swaybar mode) */
+window#waybar.hidden {
+  opacity: 0.2;
+}
+
+/* --- Workspaces buttons: pill tabs --- */
+#workspaces {
+  margin: 0 6px;
+}
+
+#workspaces button {
+  padding: 0 10px;
+  margin: 5px 4px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  color: @muted;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+  transition: all 160ms ease;
+}
+
+#workspaces button:hover {
+  background: rgba(255,255,255,0.10);
+  color: @text;
+}
+
+#workspaces button.focused,
+#workspaces button.active {
+  background: linear-gradient(180deg, rgba(255,182,193,0.22), rgba(196,181,253,0.18));
+  color: @text;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,182,193,0.35),
+    0 6px 18px rgba(0,0,0,0.18);
+}
+
+#workspaces button.urgent {
+  background: rgba(252, 165, 165, 0.20);
+  color: @text;
+  box-shadow: inset 0 0 0 1px rgba(252,165,165,0.45);
+}
+
+/* --- Global “module pill” styling --- */
+#clock,
+#battery,
+#cpu,
+#memory,
+#disk,
+#temperature,
+#backlight,
+#network,
+#pulseaudio,
+#wireplumber,
+#custom-media,
+#tray,
+#mode,
+#idle_inhibitor,
+#scratchpad,
+#power-profiles-daemon,
+#mpd,
+#language,
+#keyboard-state,
+#privacy {
+  margin: 5px 4px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: @pill;
+  color: @text;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+  transition: background 160ms ease, box-shadow 160ms ease, color 160ms ease;
+}
+
+/* Hover: gently brighten, no harsh underline */
+#clock:hover,
+#battery:hover,
+#cpu:hover,
+#memory:hover,
+#disk:hover,
+#temperature:hover,
+#backlight:hover,
+#network:hover,
+#pulseaudio:hover,
+#wireplumber:hover,
+#custom-media:hover,
+#idle_inhibitor:hover,
+#scratchpad:hover,
+#power-profiles-daemon:hover,
+#mpd:hover,
+#language:hover,
+#keyboard-state:hover {
+  background: @pill2;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.10);
+}
+
+/* Center title: make it “lighter” and less blocky */
+#window {
+  margin: 5px 10px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.88);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+}
+
+/* Mode + scratchpad: slightly accented */
+#mode,
+#scratchpad {
+  background: linear-gradient(180deg, rgba(196,181,253,0.16), rgba(255,182,193,0.12));
+  box-shadow: inset 0 0 0 1px rgba(196,181,253,0.18);
+}
+
+/* --- Specific modules: subtle semantic hints --- */
+
+/* Clock: tiny accent edge */
+#clock {
+  background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.06));
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.07),
+    inset 0 -2px 0 0 rgba(255,182,193,0.25);
+}
+
+/* Audio */
+#pulseaudio {
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.07),
+    inset 0 -2px 0 0 rgba(253,230,138,0.28);
+}
+#pulseaudio.muted {
+  color: rgba(255,255,255,0.55);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.06),
+    inset 0 -2px 0 0 rgba(255,255,255,0.10);
+}
+
+/* Network */
+#network {
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.07),
+    inset 0 -2px 0 0 rgba(196,181,253,0.26);
+}
+#network.disconnected {
+  color: rgba(255,255,255,0.92);
+  box-shadow:
+    inset 0 0 0 1px rgba(252,165,165,0.35),
+    inset 0 -2px 0 0 rgba(252,165,165,0.35);
+}
+
+/* Power profile */
+#power-profiles-daemon {
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.07),
+    inset 0 -2px 0 0 rgba(167,243,208,0.22);
+}
+
+/* CPU/Mem/Temp: calm, not neon */
+#cpu, #memory, #temperature {
+  color: rgba(255,255,255,0.88);
+}
+#temperature.critical {
+  box-shadow:
+    inset 0 0 0 1px rgba(252,165,165,0.40),
+    inset 0 -2px 0 0 rgba(252,165,165,0.40);
+}
+
+/* Battery states */
+#battery {
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.07),
+    inset 0 -2px 0 0 rgba(167,243,208,0.22);
+}
+#battery.charging, #battery.plugged {
+  box-shadow:
+    inset 0 0 0 1px rgba(167,243,208,0.35),
+    inset 0 -2px 0 0 rgba(167,243,208,0.35);
+}
+#battery.critical:not(.charging) {
+  animation: blink 0.8s steps(12) infinite alternate;
+}
+
+@keyframes blink {
+  to {
+    background: rgba(252,165,165,0.18);
+    box-shadow:
+      inset 0 0 0 1px rgba(252,165,165,0.45),
+      inset 0 -2px 0 0 rgba(252,165,165,0.45);
+  }
+}
+
+/* Tray: make it blend */
+#tray {
+  padding: 0 10px;
+}
+#tray > .passive {
+  -gtk-icon-effect: dim;
+}
+#tray > .needs-attention {
+  -gtk-icon-effect: highlight;
+  background: rgba(252,165,165,0.18);
+  border-radius: 10px;
+}
+
+/* Privacy items: small chips */
+#privacy {
+  padding: 0 6px;
+}
+#privacy-item {
+  padding: 0 8px;
+  margin: 5px 3px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+}
+#privacy-item.screenshare { box-shadow: inset 0 0 0 1px rgba(253,230,138,0.35); }
+#privacy-item.audio-in    { box-shadow: inset 0 0 0 1px rgba(167,243,208,0.30); }
+#privacy-item.audio-out   { box-shadow: inset 0 0 0 1px rgba(196,181,253,0.30); }
+
+/* Optional: make separators less harsh */
+.modules-left, .modules-center, .modules-right {
+  padding: 0 6px;
+}

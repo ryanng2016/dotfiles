@@ -1,82 +1,96 @@
+/* ==========================
+   Waybar — Pastel VN Glass (matches your Wofi)
+   - unified translucent bar
+   - rounded "pill" modules
+   - pink/lavender selected workspace
+   ========================== */
+
 * {
-    /* `otf-font-awesome` is required to be installed for icons */
-    font-family: FontAwesome, Roboto, Helvetica, Arial, sans-serif;
-    font-size: 13px;
+  font-family: "Sarasa UI J", "Noto Sans JP", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  min-height: 0;
 }
 
-window#waybar {
-    background-color: rgba(43, 48, 59, 0.5);
-    border-bottom: 3px solid rgba(100, 114, 125, 0.5);
-    color: #ffffff;
-    transition-property: background-color;
-    transition-duration: .5s;
+/* ---- Palette (more colorful warm VN) ---- */
+@define-color bg1 rgba(62, 34, 44, 0.72);   /* rose-brown */
+@define-color bg2 rgba(46, 30, 66, 0.60);   /* plum */
+@define-color bg3 rgba(26, 34, 58, 0.52);   /* dusk blue */
+
+@define-color stroke rgba(255,255,255,0.10);
+@define-color text rgba(255,255,255,0.92);
+@define-color muted rgba(255,255,255,0.72);
+
+@define-color pill rgba(255,255,255,0.09);
+@define-color pill2 rgba(255,255,255,0.14);
+
+@define-color accent rgba(255,170,180,0.95); /* pink */
+@define-color accent2 rgba(196,181,253,0.95);/* lavender */
+@define-color mint rgba(167,243,208,0.90);
+@define-color bad rgba(252,165,165,0.95);
+
+/* ---- Bar container (more color) ---- */
+window#waybar{
+  background: linear-gradient(
+    90deg,
+    @bg1 0%,
+    @bg2 45%,
+    @bg3 100%
+  );
+  color: @text;
+  border-bottom: 1px solid @stroke;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.25);
 }
 
-window#waybar.hidden {
-    opacity: 0.2;
-}
+window#waybar.hidden { opacity: 0.2; }
 
-/*
-window#waybar.empty {
-    background-color: transparent;
-}
-window#waybar.solo {
-    background-color: #FFFFFF;
-}
-*/
-
-window#waybar.termite {
-    background-color: #3F3F3F;
-}
-
-window#waybar.chromium {
-    background-color: #000000;
-    border: none;
-}
-
-button {
-    /* Use box-shadow instead of border so the text isn't offset */
-    box-shadow: inset 0 -3px transparent;
-    /* Avoid rounded borders under each button name */
-    border: none;
-    border-radius: 0;
-}
-
-/* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
-button:hover {
-    background: inherit;
-    box-shadow: inset 0 -3px #ffffff;
-}
-
-/* you can set a style on hover for any module like this */
-#pulseaudio:hover {
-    background-color: #a37800;
+/* ---- Workspaces (VN tabs) ---- */
+#workspaces {
+  margin: 0 6px;
 }
 
 #workspaces button {
-    padding: 0 5px;
-    background-color: transparent;
-    color: #ffffff;
+  padding: 0 10px;
+  margin: 5px 4px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  color: @muted;
+  border: none;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+  transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease;
 }
 
 #workspaces button:hover {
-    background: rgba(0, 0, 0, 0.2);
+  background: rgba(255,255,255,0.10);
+  color: @text;
 }
 
-#workspaces button.focused, #workspaces button.active {
-    background-color: #64727D;
-    box-shadow: inset 0 -3px #ffffff;
+#workspaces button.focused,
+#workspaces button.active {
+  background: linear-gradient(
+    180deg,
+    rgba(255,182,193,0.22),
+    rgba(196,181,253,0.18)
+  );
+  color: @text;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,182,193,0.30),
+    0 6px 18px rgba(0,0,0,0.18);
 }
 
 #workspaces button.urgent {
-    background-color: #eb4d4b;
+  background: rgba(252,165,165,0.20);
+  color: @text;
+  box-shadow: inset 0 0 0 1px rgba(252,165,165,0.45);
 }
 
-#mode {
-    background-color: #64727D;
-    box-shadow: inset 0 -3px #ffffff;
+/* Remove the default weird hover underline behavior */
+button:hover {
+  background: inherit;
+  box-shadow: none;
 }
 
+/* ---- Global module pill styling ---- */
 #clock,
 #battery,
 #cpu,
@@ -93,235 +107,115 @@ button:hover {
 #idle_inhibitor,
 #scratchpad,
 #power-profiles-daemon,
-#mpd {
-    padding: 0 10px;
-    color: #ffffff;
+#mpd,
+#keyboard-state,
+#language,
+#window {
+  margin: 5px 4px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: @pill;
+  color: @text;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+  transition: background 160ms ease, box-shadow 160ms ease, color 160ms ease;
 }
 
-#window,
-#workspaces {
-    margin: 0 4px;
+/* Center title slightly softer */
+#window {
+  padding: 0 14px;
+  color: rgba(255,255,255,0.88);
 }
 
-/* If workspaces is the leftmost module, omit left margin */
-.modules-left > widget:first-child > #workspaces {
-    margin-left: 0;
+/* Hover: gentle brighten */
+#clock:hover,
+#battery:hover,
+#cpu:hover,
+#memory:hover,
+#disk:hover,
+#temperature:hover,
+#backlight:hover,
+#network:hover,
+#pulseaudio:hover,
+#wireplumber:hover,
+#custom-media:hover,
+#idle_inhibitor:hover,
+#scratchpad:hover,
+#power-profiles-daemon:hover,
+#mpd:hover,
+#keyboard-state:hover,
+#language:hover,
+#window:hover {
+  background: @pill2;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.10);
 }
 
-/* If workspaces is the rightmost module, omit right margin */
-.modules-right > widget:last-child > #workspaces {
-    margin-right: 0;
-}
+/* ---- Subtle semantic accents (not rainbow blocks) ---- */
 
+/* Clock: tiny pink accent “edge” */
 #clock {
-    background-color: #64727D;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.07),
+    inset 0 -2px 0 0 rgba(255,182,193,0.22);
 }
 
-#battery {
-    background-color: #ffffff;
-    color: #000000;
-}
-
-#battery.charging, #battery.plugged {
-    color: #ffffff;
-    background-color: #26A65B;
-}
-
-@keyframes blink {
-    to {
-        background-color: #ffffff;
-        color: #000000;
-    }
-}
-
-/* Using steps() instead of linear as a timing function to limit cpu usage */
-#battery.critical:not(.charging) {
-    background-color: #f53c3c;
-    color: #ffffff;
-    animation-name: blink;
-    animation-duration: 0.5s;
-    animation-timing-function: steps(12);
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
-}
-
-#power-profiles-daemon {
-    padding-right: 15px;
-}
-
-#power-profiles-daemon.performance {
-    background-color: #f53c3c;
-    color: #ffffff;
-}
-
-#power-profiles-daemon.balanced {
-    background-color: #2980b9;
-    color: #ffffff;
-}
-
-#power-profiles-daemon.power-saver {
-    background-color: #2ecc71;
-    color: #000000;
-}
-
-label:focus {
-    background-color: #000000;
-}
-
-#cpu {
-    background-color: #2ecc71;
-    color: #000000;
-}
-
-#memory {
-    background-color: #9b59b6;
-}
-
-#disk {
-    background-color: #964B00;
-}
-
-#backlight {
-    background-color: #90b1b1;
-}
-
-#network {
-    background-color: #2980b9;
-}
-
-#network.disconnected {
-    background-color: #f53c3c;
-}
-
+/* Audio: warm edge */
 #pulseaudio {
-    background-color: #f1c40f;
-    color: #000000;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.07),
+    inset 0 -2px 0 0 rgba(253,230,138,0.22);
 }
-
 #pulseaudio.muted {
-    background-color: #90b1b1;
-    color: #2a5c45;
+  color: rgba(255,255,255,0.55);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.06),
+    inset 0 -2px 0 0 rgba(255,255,255,0.10);
 }
 
-#wireplumber {
-    background-color: #fff0f5;
-    color: #000000;
+/* Network: lavender edge */
+#network {
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.07),
+    inset 0 -2px 0 0 rgba(196,181,253,0.22);
+}
+#network.disconnected {
+  box-shadow:
+    inset 0 0 0 1px rgba(252,165,165,0.35),
+    inset 0 -2px 0 0 rgba(252,165,165,0.35);
 }
 
-#wireplumber.muted {
-    background-color: #f53c3c;
+/* Battery: mint edge */
+#battery {
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.07),
+    inset 0 -2px 0 0 rgba(167,243,208,0.18);
+}
+#battery.charging, #battery.plugged {
+  box-shadow:
+    inset 0 0 0 1px rgba(167,243,208,0.30),
+    inset 0 -2px 0 0 rgba(167,243,208,0.30);
 }
 
-#custom-media {
-    background-color: #66cc99;
-    color: #2a5c45;
-    min-width: 100px;
+/* Critical battery blink (soft red pulse) */
+@keyframes blink {
+  to {
+    background: rgba(252,165,165,0.18);
+    box-shadow:
+      inset 0 0 0 1px rgba(252,165,165,0.45),
+      inset 0 -2px 0 0 rgba(252,165,165,0.45);
+  }
+}
+#battery.critical:not(.charging) {
+  animation: blink 0.8s steps(12) infinite alternate;
 }
 
-#custom-media.custom-spotify {
-    background-color: #66cc99;
-}
-
-#custom-media.custom-vlc {
-    background-color: #ffa000;
-}
-
-#temperature {
-    background-color: #f0932b;
-}
-
-#temperature.critical {
-    background-color: #eb4d4b;
-}
-
-#tray {
-    background-color: #2980b9;
-}
-
-#tray > .passive {
-    -gtk-icon-effect: dim;
-}
-
+/* Tray blend */
+#tray { padding: 0 10px; }
+#tray > .passive { -gtk-icon-effect: dim; }
 #tray > .needs-attention {
-    -gtk-icon-effect: highlight;
-    background-color: #eb4d4b;
+  -gtk-icon-effect: highlight;
+  background: rgba(252,165,165,0.18);
+  border-radius: 10px;
 }
 
-#idle_inhibitor {
-    background-color: #2d3436;
-}
-
-#idle_inhibitor.activated {
-    background-color: #ecf0f1;
-    color: #2d3436;
-}
-
-#mpd {
-    background-color: #66cc99;
-    color: #2a5c45;
-}
-
-#mpd.disconnected {
-    background-color: #f53c3c;
-}
-
-#mpd.stopped {
-    background-color: #90b1b1;
-}
-
-#mpd.paused {
-    background-color: #51a37a;
-}
-
-#language {
-    background: #00b093;
-    color: #740864;
-    padding: 0 5px;
-    margin: 0 5px;
-    min-width: 16px;
-}
-
-#keyboard-state {
-    background: #97e1ad;
-    color: #000000;
-    padding: 0 0px;
-    margin: 0 5px;
-    min-width: 16px;
-}
-
-#keyboard-state > label {
-    padding: 0 5px;
-}
-
-#keyboard-state > label.locked {
-    background: rgba(0, 0, 0, 0.2);
-}
-
-#scratchpad {
-    background: rgba(0, 0, 0, 0.2);
-}
-
-#scratchpad.empty {
-	background-color: transparent;
-}
-
-#privacy {
-    padding: 0;
-}
-
-#privacy-item {
-    padding: 0 5px;
-    color: white;
-}
-
-#privacy-item.screenshare {
-    background-color: #cf5700;
-}
-
-#privacy-item.audio-in {
-    background-color: #1ca000;
-}
-
-#privacy-item.audio-out {
-    background-color: #0069d4;
-}
+/* Reduce hard margins at ends */
+.modules-left, .modules-center, .modules-right { padding: 0 6px; }
