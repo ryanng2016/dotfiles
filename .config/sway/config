@@ -54,7 +54,7 @@ client.placeholder      #3a2a2d  #1c1412  #bdbdbd  #2a1e1f  #3a2a2d
 # Wallpaper
 # =========================
 # Make sure swaybg is installed: sudo pacman -S swaybg
-exec_always swaybg -i /home/madoka/theme/Holy_Heaven.webp -m fill
+output * bg /home/madoka/Pictures/wallpapers/Holy_Heaven.png fill
 
 # =========================
 # Keybindings
@@ -169,6 +169,7 @@ bindsym $mod+Ctrl+l exec swaylock -f
 exec_always sh -lc 'pkill waybar; waybar'
 exec_always /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec_always sh -lc 'pgrep -x mako >/dev/null || mako'
+exec_always --no-startup-id nm-applet
 
 # =========================
 # Disable default swaybar
